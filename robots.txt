@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rashiin.github.io/scroll-animation/sitemap.xml
