@@ -1,0 +1,54 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import poster from '../assets/renders/teaser-poster.png';
+import { url, shared } from '../i18n.js';
+const { t } = Astro.props;
+const v = t.teaser;
+---
+<section class="section teaser" id="teaser">
+  <div class="wrap">
+    <div class="section-head section-head--split">
+      <div>
+        <span class="kicker" data-reveal>{v.kicker}</span>
+        <h2 class="h-lg" data-split>{v.title}</h2>
+      </div>
+      <p class="lead" data-reveal>{v.text}</p>
+    </div>
+  </div>
+
+  <div class="teaser__frame" data-teaser-frame>
+    <div class="teaser__media" data-video
+      data-mp4={url(shared.video.mp4)} data-webm={url(shared.video.webm)}>
+      <Picture src={poster} formats={['avif']} fallbackFormat="webp" widths={[640, 1024, 1600]} sizes="100vw" alt={v.title} loading="lazy" class="teaser__poster" data-parallax="0.12" />
+      <button class="teaser__play" type="button" data-video-play data-track="video_play">
+        <span class="ring"></span>
+        <Icon name="play" size={28} />
+        <span class="sr-only">{v.play}</span>
+      </button>
+      <span class="teaser__label latin">SPACE CABIN · TEASER · 00:18</span>
+    </div>
+  </div>
+  <p class="wrap teaser__cap">{v.caption}</p>
+</section>
+
+<style>
+  .teaser__frame { width: min(100% - var(--gutter) * 2, 1600px); margin-inline: auto; }
+  .teaser__media { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: #000; }
+  .teaser__media :global(picture), .teaser__media :global(img), .teaser__media :global(video) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .teaser__media :global(img) { transform: scale(1.15); }
+  .teaser__media::after { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 60% at 50% 50%, transparent, rgb(0 0 0 / 0.45)); pointer-events: none; }
+  .teaser__media.is-playing::after { display: none; }
+  .teaser__play {
+    position: absolute; z-index: 2; left: 50%; top: 50%; translate: -50% -50%;
+    width: clamp(84px, 10vw, 128px); aspect-ratio: 1; border-radius: 50%; border: 0; display: grid; place-items: center;
+    color: #120800; background: var(--accent); box-shadow: 0 20px 60px -10px rgb(255 122 26 / 0.8);
+    transition: transform 0.5s var(--ease-out);
+  }
+  .teaser__play:hover { transform: scale(1.08); }
+  .teaser__play :global(svg) { margin-inline-start: 4px; }
+  .teaser__play .ring { position: absolute; inset: -14px; border-radius: 50%; border: 1px solid rgb(255 122 26 / 0.6); animation: ring 2.4s var(--ease-out) infinite; }
+  @keyframes ring { from { transform: scale(0.85); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+  .teaser__label { position: absolute; z-index: 2; inset-inline-start: 20px; bottom: 18px; font-size: 0.7rem; letter-spacing: 0.2em; color: rgb(255 255 255 / 0.7); }
+  .teaser__cap { margin-top: 14px; font-size: 0.8rem; color: var(--dim); }
+</style>

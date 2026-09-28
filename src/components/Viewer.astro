@@ -1,0 +1,155 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import poster from '../assets/renders/viewer-poster.png';
+import { digits } from '../i18n.js';
+const { t } = Astro.props;
+const v = t.viewer;
+const L = t.lang;
+const ids = ['shell', 'glass', 'frame', 'insulation', 'smart', 'led', 'deck'];
+---
+<section class="section viewer" id="viewer">
+  <div class="wrap">
+    <div class="section-head section-head--split">
+      <div>
+        <span class="kicker" data-reveal>{v.kicker}</span>
+        <h2 class="h-lg" data-split>{v.title}</h2>
+      </div>
+      <p class="lead" data-reveal>{v.text}</p>
+    </div>
+
+    <div class="vw" data-viewer data-reveal data-lang={L} data-hotspots={JSON.stringify(v.hotspots)}>
+      <div class="vw__stage" data-viewer-stage>
+        <Picture src={poster} formats={['avif']} fallbackFormat="webp" widths={[640, 1024, 1600]} sizes="(min-width: 1100px) 75vw, 100vw" alt={t.meta.ogAlt} loading="lazy" class="vw__poster" />
+        <canvas class="vw__canvas" data-viewer-canvas aria-label={v.title} role="img"></canvas>
+
+        <div class="vw__hotspots" data-hotspots>
+          {ids.map((id, i) => (
+            <button type="button" class="hs" data-hs={id} aria-label={v.hotspots[id].title} hidden>
+              <span class="num">{digits(i + 1, L)}</span>
+            </button>
+          ))}
+        </div>
+
+        <div class="vw__loader" data-viewer-loader hidden>
+          <span class="spinner"></span><span>{v.loading}</span>
+        </div>
+
+        <div class="vw__gate" data-viewer-gate hidden>
+          <p>{v.weakNote}</p>
+          <button type="button" class="btn btn--primary" data-viewer-load data-track="model_load">
+            <Icon name="cube" />{v.load3d}
+          </button>
+        </div>
+
+        <div class="vw__bar" role="toolbar" aria-label={v.title}>
+          <div class="seg" role="radiogroup" aria-label={v.moods.day + " / " + v.moods.night}>
+            <button type="button" role="radio" aria-checked="false" data-mood="day" aria-label={v.moods.day}><Icon name="sun" size={16} /><span>{v.moods.day}</span></button>
+            <button type="button" role="radio" aria-checked="true" data-mood="dusk" aria-label={v.moods.dusk}><Icon name="sunset" size={16} /><span>{v.moods.dusk}</span></button>
+            <button type="button" role="radio" aria-checked="false" data-mood="night" aria-label={v.moods.night}><Icon name="moon" size={16} /><span>{v.moods.night}</span></button>
+          </div>
+          <div class="tools">
+            <button type="button" class="tool" aria-pressed="false" data-xray title={v.xray}><Icon name="eye" size={18} /><span>{v.xray}</span></button>
+            <button type="button" class="tool" aria-pressed="true" data-autorotate title={v.rotate}><Icon name="rotate" size={18} /><span class="sr-only">{v.rotate}</span></button>
+            <button type="button" class="tool" data-reset title={v.reset}><Icon name="reset" size={18} /><span class="sr-only">{v.reset}</span></button>
+            <button type="button" class="tool" data-fullscreen title={v.fullscreen}><Icon name="expand" size={18} /><span class="sr-only">{v.fullscreen}</span></button>
+          </div>
+        </div>
+
+        <p class="vw__hint">{v.hint}</p>
+
+        <div class="vw__info" data-hs-panel hidden aria-live="polite">
+          <button type="button" class="vw__close" data-hs-close aria-label={v.close}><Icon name="x" size={18} /></button>
+          <span class="vw__info-idx num" data-hs-idx></span>
+          <h3 data-hs-title></h3>
+          <p data-hs-text></p>
+          <span class="vw__spec" data-hs-spec></span>
+        </div>
+      </div>
+
+      <ol class="vw__legend">
+        {ids.map((id, i) => (
+          <li>
+            <button type="button" data-hs-legend={id}>
+              <span class="num">{digits(String(i + 1).padStart(2, '0'), L)}</span>
+              <span><b>{v.hotspots[id].title}</b><small>{v.hotspots[id].spec}</small></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vw { display: grid; gap: 16px; }
+  @media (min-width: 1100px) { .vw { grid-template-columns: 1fr 300px; } }
+  .vw__stage { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: #0a0c10; touch-action: pan-y; }
+  .vw__stage.is-live { touch-action: none; }
+  .vw__stage:fullscreen { border-radius: 0; aspect-ratio: auto; }
+  @media (max-width: 720px) { .vw__stage { aspect-ratio: 4 / 5; } }
+  .vw__stage :global(picture), .vw__stage :global(.vw__poster), .vw__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .vw__stage :global(.vw__poster) { object-fit: cover; }
+  .vw__canvas { opacity: 0; transition: opacity 0.8s; cursor: grab; }
+  .vw__canvas:active { cursor: grabbing; }
+  .vw__canvas.is-live { opacity: 1; }
+
+  .vw__hotspots { position: absolute; inset: 0; pointer-events: none; }
+  .hs {
+    position: absolute; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / 0.7); background: rgb(10 12 16 / 0.55); color: #fff; font-size: 0.8rem; font-weight: 700;
+    display: grid; place-items: center; pointer-events: auto; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: opacity 0.3s, background 0.3s, border-color 0.3s; will-change: transform;
+  }
+  .hs::before { content: ''; position: absolute; inset: -7px; border-radius: 50%; border: 1px solid rgb(255 122 26 / 0.8); animation: pulse 2s var(--ease-out) infinite; }
+  .hs:hover, .hs.is-active { background: var(--accent); border-color: var(--accent); color: #140a02; }
+  .hs.is-behind { opacity: 0; pointer-events: none; }
+  @keyframes pulse { from { transform: scale(0.8); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+
+  .vw__bar { position: absolute; inset: auto 12px 12px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; pointer-events: none; }
+  .vw__bar > * { pointer-events: auto; }
+  .seg, .tools { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgb(10 12 16 / 0.7); border: 1px solid var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .seg button, .tool { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font-size: 0.82rem; font-weight: 600; transition: background 0.25s, color 0.25s; }
+  .tool { padding: 0 11px; }
+  .seg button[aria-checked='true'], .tool[aria-pressed='true'] { background: rgb(255 255 255 / 0.12); color: var(--text); }
+  .tool[data-xray][aria-pressed='true'] { background: var(--cyan); color: #04141a; }
+  .seg button:hover, .tool:hover { color: var(--text); }
+  @media (max-width: 560px) {
+    .seg span, .tool span:not(.sr-only) { display: none; }
+    .seg button { padding: 0 12px; }
+  }
+
+  .vw__hint { position: absolute; top: 14px; inset-inline-start: 16px; font-size: 0.75rem; color: rgb(255 255 255 / 0.6); pointer-events: none; }
+
+  .vw__info {
+    position: absolute; top: 14px; inset-inline-end: 14px; width: min(320px, calc(100% - 28px)); padding: 20px; border-radius: 18px;
+    background: rgb(12 15 20 / 0.82); border: 1px solid var(--line-2); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    display: grid; gap: 8px; animation: pop 0.45s var(--ease-out);
+  }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
+  .vw__info h3 { font-size: 1.15rem; font-weight: 700; }
+  .vw__info p { font-size: 0.9rem; color: var(--muted); }
+  .vw__info-idx { color: var(--accent); font-size: 0.8rem; }
+  .vw__spec { justify-self: start; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; border: 1px solid rgb(127 233 255 / 0.35); color: var(--cyan); }
+  .vw__close { position: absolute; top: 10px; inset-inline-end: 10px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--muted); display: grid; place-items: center; }
+  @media (max-width: 720px) {
+    .vw__info { top: auto; bottom: 64px; inset-inline: 12px; width: auto; }
+  }
+
+  .vw__loader, .vw__gate { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; text-align: center; padding: 24px; background: rgb(7 9 12 / 0.45); }
+  .vw__loader { grid-auto-flow: column; align-items: center; font-size: 0.9rem; color: var(--muted); }
+  .vw__gate p { max-width: 36ch; color: #d7dde5; font-size: 0.92rem; }
+  .spinner { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--accent); animation: spin 0.9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .vw__legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; align-content: start; }
+  .vw__legend button { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: start; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); transition: border-color 0.25s, background 0.25s; }
+  .vw__legend button:hover, .vw__legend button.is-active { border-color: rgb(255 122 26 / 0.6); background: rgb(255 122 26 / 0.08); }
+  .vw__legend .num { color: var(--accent); font-size: 0.8rem; padding-top: 2px; }
+  .vw__legend b { display: block; font-size: 0.95rem; }
+  .vw__legend small { display: block; color: var(--muted); font-size: 0.78rem; }
+  @media (max-width: 1099px) {
+    .vw__legend { grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: none; }
+    .vw__legend li { scroll-snap-align: start; }
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Marquee from './Marquee.astro';
+import Teaser from './Teaser.astro';
+import Features from './Features.astro';
+import Viewer from './Viewer.astro';
+import Plan from './Plan.astro';
+import Versions from './Versions.astro';
+import Uses from './Uses.astro';
+import Timeline from './Timeline.astro';
+import Gallery from './Gallery.astro';
+import Faq from './Faq.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+import MobileBar from './MobileBar.astro';
+import { LANGS } from '../i18n.js';
+
+const { lang } = Astro.props;
+const t = LANGS[lang];
+---
+<Base t={t}>
+  <Header t={t} />
+  <main id="main">
+    <Hero t={t} />
+    <Marquee t={t} />
+    <Teaser t={t} />
+    <Features t={t} />
+    <Viewer t={t} />
+    <Plan t={t} />
+    <Versions t={t} />
+    <Uses t={t} />
+    <Timeline t={t} />
+    <Gallery t={t} />
+    <Faq t={t} />
+    <Contact t={t} />
+  </main>
+  <Footer t={t} />
+  <MobileBar t={t} />
+  <script>
+    import '../scripts/main.js';
+  </script>
+</Base>

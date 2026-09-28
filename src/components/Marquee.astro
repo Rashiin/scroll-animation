@@ -1,0 +1,26 @@
+---
+const { t } = Astro.props;
+const items = [...t.marquee, ...t.marquee];
+---
+<div class="mq" aria-hidden="true">
+  <div class="mq__track" data-marquee>
+    {[0, 1].map(() => (
+      <ul>
+        {items.map((m) => <li>{m}<svg viewBox="0 0 20 20"><path d="M10 0l2.2 7.8L20 10l-7.8 2.2L10 20l-2.2-7.8L0 10l7.8-2.2z" /></svg></li>)}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .mq { position: relative; z-index: 3; overflow: hidden; border-block: 1px solid var(--line); background: var(--bg-2); padding-block: 22px; margin-top: -1px; }
+  .mq__track { display: flex; width: max-content; animation: mq 48s linear infinite; }
+  :global([dir='rtl']) .mq__track { animation-name: mq-rtl; }
+  .mq ul { display: flex; list-style: none; margin: 0; padding: 0; }
+  .mq li { display: flex; align-items: center; gap: 36px; padding-inline-end: 36px; font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem); font-weight: 700; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.35); }
+  .mq li:nth-child(3n + 1) { color: var(--text); -webkit-text-stroke: 0; }
+  .mq svg { width: 18px; height: 18px; fill: var(--accent); flex: none; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+  @keyframes mq-rtl { to { transform: translateX(50%); } }
+  @media (prefers-reduced-motion: reduce) { .mq__track { animation: none; } }
+</style>

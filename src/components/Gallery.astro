@@ -1,0 +1,74 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import Icon from './Icon.astro';
+import g1 from '../assets/renders/gallery-1.png';
+import g2 from '../assets/renders/gallery-2.png';
+import g3 from '../assets/renders/gallery-3.png';
+import g4 from '../assets/renders/gallery-4.png';
+import g5 from '../assets/renders/gallery-5.png';
+import g6 from '../assets/renders/gallery-6.png';
+const { t } = Astro.props;
+const g = t.gallery;
+const imgs = [g1, g2, g3, g4, g5, g6];
+const full = await Promise.all(imgs.map((src) => getImage({ src, width: 1600, format: 'webp', quality: 78 })));
+---
+<section class="section gal" id="gallery">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker" data-reveal>{g.kicker}</span>
+      <h2 class="h-lg" data-split>{g.title}</h2>
+    </div>
+    <ul class="gal__grid" data-gallery>
+      {imgs.map((src, i) => (
+        <li class={`gi gi--${i + 1}`} data-reveal>
+          <button type="button" class="gi__btn" data-gal-open={i} data-full={full[i].src} data-alt={g.items[i].alt} data-caption={g.items[i].caption}>
+            <Picture src={src} formats={['avif']} fallbackFormat="webp" widths={[480, 800, 1200]} sizes="(min-width: 1000px) 40vw, 100vw" alt={g.items[i].alt} loading="lazy" />
+            <span class="gi__cap"><span>{g.items[i].caption}</span><Icon name="expand" size={18} /></span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <dialog class="lb" data-lightbox aria-label={g.title}>
+    <figure>
+      <img data-lb-img alt="" width="1600" height="1066" />
+      <figcaption data-lb-cap></figcaption>
+    </figure>
+    <button type="button" class="lb__btn lb__close" data-lb-close aria-label={g.close}><Icon name="x" /></button>
+    <button type="button" class="lb__btn lb__prev" data-lb-prev aria-label={g.prev}><Icon name="arrow" /></button>
+    <button type="button" class="lb__btn lb__next" data-lb-next aria-label={g.next}><Icon name="arrow" /></button>
+  </dialog>
+</section>
+
+<style>
+  .gal__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 700px) {
+    .gal__grid { grid-template-columns: repeat(12, 1fr); grid-auto-rows: clamp(120px, 14vw, 210px); }
+    .gi--1 { grid-column: 1 / 8; grid-row: span 2; }
+    .gi--2 { grid-column: 8 / 13; grid-row: span 3; }
+    .gi--3 { grid-column: 1 / 8; grid-row: span 2; }
+    .gi--4 { grid-column: 1 / 6; grid-row: span 2; }
+    .gi--5 { grid-column: 6 / 9; grid-row: span 2; }
+    .gi--6 { grid-column: 9 / 13; grid-row: span 1; }
+  }
+  .gi__btn { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg-3); }
+  .gi__btn :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+  @media (max-width: 699px) { .gi__btn :global(img) { aspect-ratio: 3 / 2; } }
+  .gi__btn:hover :global(img) { transform: scale(1.05); }
+  .gi__cap { position: absolute; inset: auto 12px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: rgb(8 10 14 / 0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 0.85rem; text-align: start; transform: translateY(8px); opacity: 0.9; transition: transform 0.5s var(--ease-out), opacity 0.4s; }
+  .gi__btn:hover .gi__cap { transform: none; opacity: 1; }
+
+  .lb { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(4 5 7 / 0.94); color: var(--text); }
+  .lb::backdrop { background: rgb(0 0 0 / 0.6); backdrop-filter: blur(6px); }
+  .lb[open] { display: grid; place-items: center; animation: fade 0.4s var(--ease-out); }
+  @keyframes fade { from { opacity: 0; } }
+  .lb figure { margin: 0; display: grid; gap: 14px; justify-items: center; padding: 64px 16px; }
+  .lb img { max-width: min(92vw, 1600px); max-height: 78dvh; width: auto; height: auto; border-radius: 14px; }
+  .lb figcaption { color: var(--muted); font-size: 0.9rem; }
+  .lb__btn { position: absolute; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line-2); background: rgb(255 255 255 / 0.06); display: grid; place-items: center; }
+  .lb__close { top: 16px; inset-inline-end: 16px; }
+  .lb__prev { top: 50%; inset-inline-start: 16px; }
+  .lb__next { top: 50%; inset-inline-end: 16px; }
+  :global([dir='ltr']) .lb__prev :global(svg), :global([dir='rtl']) .lb__next :global(svg) { transform: scaleX(-1); }
+</style>

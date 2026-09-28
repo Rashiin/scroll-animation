@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import { shared } from '../i18n.js';
+const { t } = Astro.props;
+---
+<div class="mbar" data-mbar>
+  <a class="mbar__call" href={`tel:${shared.contact.phone}`} data-track="call_click" data-track-label="mobile_bar">
+    <Icon name="phone" size={20} /><span>{t.mobileBar.call}</span>
+  </a>
+  <a class="btn btn--primary mbar__cta" href="#contact" data-track="cta_click" data-track-label="mobile_bar">{t.mobileBar.consult}</a>
+</div>
+
+<style>
+  .mbar { display: none; }
+  @media (max-width: 720px) {
+    .mbar {
+      position: fixed; z-index: 45; inset: auto 12px calc(12px + env(safe-area-inset-bottom)); display: flex; gap: 8px; padding: 6px;
+      border-radius: 999px; background: rgb(12 15 20 / 0.82); border: 1px solid var(--line-2);
+      backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4);
+      box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.7);
+      transform: translateY(160%); transition: transform 0.6s var(--ease-out);
+    }
+    .mbar.is-visible { transform: none; }
+    .mbar__call { display: inline-flex; align-items: center; gap: 8px; padding: 0 18px; min-height: 48px; border-radius: 999px; background: rgb(255 255 255 / 0.08); font-weight: 700; font-size: 0.92rem; }
+    .mbar__cta { flex: 1; min-height: 48px; }
+  }
+</style>

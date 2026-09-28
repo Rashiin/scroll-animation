@@ -1,0 +1,243 @@
+{
+  "lang": "en",
+  "dir": "ltr",
+  "locale": "en-US",
+  "ogLocale": "en_US",
+  "meta": {
+    "title": "Mammut Space Cabin | 42 m² Smart Prefab Cabin",
+    "description": "Space Cabin by Mammut: a 42 m² smart prefabricated cabin with a galvanised steel frame, fibreglass shell, polyurethane insulation, double glazing and app control. Four versions, installed in one day.",
+    "ogAlt": "3D render of the Mammut Space Cabin at dusk"
+  },
+  "brand": { "name": "Space Cabin", "company": "Mammut Structures", "wordmark": "MAMMUT" },
+  "nav": [
+    { "href": "#features", "label": "Features" },
+    { "href": "#viewer", "label": "3D" },
+    { "href": "#plan", "label": "Plan" },
+    { "href": "#versions", "label": "Versions" },
+    { "href": "#faq", "label": "FAQ" }
+  ],
+  "navCta": "Get a consultation",
+  "langSwitch": { "label": "نسخه فارسی", "short": "فا" },
+  "hero": {
+    "eyebrow": "Mammut Structures presents",
+    "titleA": "A home built",
+    "titleB": "from the future",
+    "lead": "Space Cabin is a 42 m² smart prefab with a galvanised frame, a seamless fibreglass shell and full app control. Four versions. Installed in a single day.",
+    "ctaPrimary": "Free consultation",
+    "ctaSecondary": "Book a showroom visit",
+    "scrollHint": "Scroll",
+    "stats": [
+      { "value": 42, "suffix": "m²", "label": "Living area" },
+      { "value": 12, "suffix": "m", "label": "Length" },
+      { "value": 3.5, "suffix": "m", "label": "Width", "decimals": 1 },
+      { "value": 1, "suffix": "day", "label": "On-site install" }
+    ],
+    "boot": "SYSTEM ONLINE"
+  },
+  "marquee": ["Galvanised frame", "Fibreglass shell", "PU insulation", "Double glazing", "Smart control", "One-day install", "Solar ready", "Relocatable"],
+  "teaser": {
+    "kicker": "02 — Teaser",
+    "title": "18 seconds to the future",
+    "text": "The official Space Cabin teaser — from the production line to its first night under the stars.",
+    "play": "Play teaser",
+    "caption": "The video loads only when you press play, to keep the page fast."
+  },
+  "features": {
+    "kicker": "03 — Key features",
+    "title": "Engineered for every climate, designed for living",
+    "text": "Every layer of the Space Cabin was chosen for a reason: longer life, lower energy bills and more comfort.",
+    "items": [
+      { "icon": "frame", "title": "Galvanised steel frame", "text": "Hot-dip galvanised chassis resists rust and humidity, and sits on adjustable legs." },
+      { "icon": "shell", "title": "Fibreglass shell", "text": "A seamless moulded body with a glossy gel-coat: light, UV-resistant and never needs painting." },
+      { "icon": "insulation", "title": "Polyurethane insulation", "text": "Up to 100 mm of sprayed PU foam keeps summer heat and winter cold outside." },
+      { "icon": "glass", "title": "Double glazing", "text": "A panoramic window in argon-filled Low-E double glazing lets in full daylight with minimal heat loss." },
+      { "icon": "smart", "title": "Smart system", "text": "Lighting, climate, blinds and the door lock, all controlled from your phone, even remotely." },
+      { "icon": "bolt", "title": "One-day install", "text": "The cabin arrives complete from the factory. Connect water, power and drainage and you're in." },
+      { "icon": "sun", "title": "Solar ready", "text": "Pre-routed wiring and roof mounts for PV panels, ready for off-grid sites." },
+      { "icon": "move", "title": "Relocatable", "text": "No permanent concrete foundation. Move the cabin whenever you want to." }
+    ],
+    "counters": [
+      { "value": 42, "suffix": "", "label": "m² of living space" },
+      { "value": 100, "suffix": "mm", "label": "Insulation thickness" },
+      { "value": 30, "suffix": "+", "label": "Years structural life" },
+      { "value": 4, "suffix": "", "label": "Versions" }
+    ]
+  },
+  "viewer": {
+    "kicker": "04 — 3D viewer",
+    "title": "Explore the cabin from every angle",
+    "text": "Rotate, zoom and tap the glowing points to see the engineering behind each part.",
+    "hint": "Drag to rotate · scroll or pinch to zoom",
+    "moods": { "day": "Day", "dusk": "Dusk", "night": "Night" },
+    "xray": "Interior view",
+    "rotate": "Auto-rotate",
+    "reset": "Reset view",
+    "fullscreen": "Fullscreen",
+    "load3d": "Load 3D model",
+    "loading": "Preparing the model…",
+    "weakNote": "To keep things fast on your device, we're showing a still image first.",
+    "close": "Close",
+    "hotspots": {
+      "shell": { "title": "Fibreglass shell", "text": "A one-piece body moulded with marine-grade gel-coat. No seams, fully waterproof and UV-resistant.", "spec": "8 mm · Fire class B1" },
+      "glass": { "title": "Panoramic window", "text": "Low-E double glazing in a thermally broken aluminium frame, with a 7-metre view.", "spec": "6+12+6 mm · Argon filled" },
+      "frame": { "title": "Galvanised chassis", "text": "Hot-dip galvanised main and cross beams on 8 adjustable legs for uneven ground.", "spec": "80 µm zinc coating" },
+      "insulation": { "title": "PU insulation", "text": "Sprayed polyurethane between the outer shell and the inner lining. No thermal bridges.", "spec": "Up to 100 mm · λ = 0.022" },
+      "smart": { "title": "Smart panel", "text": "Digital lock, lighting and climate control from the entry panel or the mobile app.", "spec": "Wi-Fi · Bluetooth · Voice" },
+      "led": { "title": "LED contour light", "text": "A light line that traces the capsule silhouette at night, with adjustable colour and brightness.", "spec": "RGBW · 24 V" },
+      "deck": { "title": "Timber deck", "text": "A thermo-wood deck with a glass balustrade extends the living room outdoors.", "spec": "8 m² · Pulsar & Zenith" }
+    }
+  },
+  "plan": {
+    "kicker": "05 — Floor plan & interior",
+    "title": "42 m² without a wasted centimetre",
+    "text": "A linear layout carries daylight from the panoramic window into every zone. Tap any area.",
+    "zones": [
+      { "id": "bath", "title": "Bathroom", "area": "4.2", "text": "Glass shower, vanity unit and WC, with mechanical ventilation." },
+      { "id": "entry", "title": "Entry", "area": "3.6", "text": "Smart panel, built-in shoe storage and direct access to the deck." },
+      { "id": "kitchen", "title": "Kitchen", "area": "8.4", "text": "Full-height cabinets, induction hob, sink and a compact breakfast island." },
+      { "id": "living", "title": "Living", "area": "12.6", "text": "A three-seat sofa facing the panoramic window, with space for a TV and a desk." },
+      { "id": "bed", "title": "Bedroom", "area": "10.2", "text": "Double bed, fitted wardrobe and a skylight for watching the night sky." },
+      { "id": "deck", "title": "Deck", "area": "8.0", "text": "A timber deck with a glass balustrade beside the entrance (higher versions)." }
+    ],
+    "dims": { "length": "12.00 m", "width": "3.50 m", "height": "2.40 m clear height" },
+    "note": "Areas are approximate. The layout can be customised."
+  },
+  "versions": {
+    "kicker": "06 — Compare versions",
+    "title": "Four versions, one standard",
+    "text": "Choose the version that fits your lifestyle and your budget.",
+    "showPrice": "Show prices",
+    "priceHidden": "Price on consultation",
+    "from": "from",
+    "currency": "Toman",
+    "featured": "Best seller",
+    "select": "Request this version",
+    "selected": "Selected",
+    "compare": "Full comparison",
+    "delivery": "Delivery",
+    "days": "days",
+    "priceNote": "Prices are illustrative and exclude transport and installation.",
+    "items": {
+      "orbit": { "name": "Orbit", "tagline": "Minimal studio", "highlights": ["Open-plan studio", "Kitchenette", "Smart lighting"] },
+      "nova": { "name": "Nova", "tagline": "Complete one-bed", "highlights": ["Private bathroom", "App climate control", "Solar ready"] },
+      "pulsar": { "name": "Pulsar", "tagline": "Built for full-time living", "highlights": ["Full kitchen", "8 m² timber deck", "100 mm insulation"] },
+      "zenith": { "name": "Zenith", "tagline": "The signature experience", "highlights": ["Solar package", "Smart security & cameras", "Acoustic glazing"] }
+    },
+    "matrix": {
+      "frame": "Galvanised frame",
+      "shell": "Fibreglass shell",
+      "insulation": "PU insulation (mm)",
+      "glazing": "Glazing",
+      "smart": "Smart system",
+      "bath": "Bathroom",
+      "kitchen": "Kitchen",
+      "deck": "Timber deck",
+      "solar": "Solar power",
+      "warranty": "Structural warranty (yrs)"
+    },
+    "values": {
+      "double": "Double",
+      "lowe": "Double Low-E",
+      "lowe_acoustic": "Acoustic Low-E",
+      "light": "Lighting",
+      "climate": "Lighting + climate",
+      "full": "Full",
+      "full_security": "Full + security",
+      "kitchenette": "Kitchenette",
+      "ready": "Ready",
+      "included": "Included"
+    }
+  },
+  "uses": {
+    "kicker": "07 — Use cases",
+    "title": "One cabin, endless scenarios",
+    "text": "From a weekend villa to an eco-lodge, the Space Cabin goes wherever you need it.",
+    "items": [
+      { "tag": "RESIDENCE", "title": "Villa & second home", "text": "A modern home by the sea or in the mountains, without months of construction." },
+      { "tag": "GLAMPING", "title": "Eco-tourism & glamping", "text": "A stay so distinctive that guests book it for the photos alone." },
+      { "tag": "OFFICE", "title": "Office & studio", "text": "A quiet backyard workspace with fibre internet and natural light." },
+      { "tag": "HOSPITALITY", "title": "Hotels & resorts", "text": "Add capacity fast with identical cabins you can manage remotely." },
+      { "tag": "SITE", "title": "Site camps", "text": "Offices and staff housing that move on when the project ends." },
+      { "tag": "RETAIL", "title": "Café & pop-up", "text": "A café, gallery or pop-up store that people notice from across the street." }
+    ]
+  },
+  "timeline": {
+    "kicker": "08 — From order to delivery",
+    "title": "A transparent path, a precise schedule",
+    "text": "You'll always know where your cabin is. The whole process usually takes 30–45 days.",
+    "steps": [
+      { "time": "Day 1", "title": "Free consultation", "text": "We review your needs, your site and your budget, then recommend a version." },
+      { "time": "Day 3", "title": "Showroom visit", "text": "See and touch a real cabin at our display site." },
+      { "time": "Day 5", "title": "Contract & customisation", "text": "Finalise colours, interior materials, layout and the smart package." },
+      { "time": "Days 6–35", "title": "Factory production", "text": "Built indoors under controlled conditions, with a photo update every week." },
+      { "time": "Day 36", "title": "Quality control", "text": "Water-tightness, electrical, plumbing and smart-system tests before shipping." },
+      { "time": "Day 38", "title": "Transport", "text": "Insured delivery by trailer anywhere in the country." },
+      { "time": "Day 40", "title": "Install & handover", "text": "Craned into place, connected to utilities and handed over the same day." }
+    ]
+  },
+  "gallery": {
+    "kicker": "09 — Gallery",
+    "title": "At every hour of the day",
+    "items": [
+      { "alt": "Three-quarter daylight view of the Space Cabin with its timber deck", "caption": "Morning · Entrance" },
+      { "alt": "Panoramic window glowing warm at night", "caption": "Night · Panoramic window" },
+      { "alt": "Side view of the capsule-shaped end at dusk", "caption": "Dusk · Capsule form" },
+      { "alt": "Top-down view with a see-through shell showing the interior layout", "caption": "Interior layout" },
+      { "alt": "Low-angle night view of the deck and galvanised legs", "caption": "Night · Deck" },
+      { "alt": "Rear view with skylight in daylight", "caption": "Day · Rear view" }
+    ],
+    "close": "Close",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "faq": {
+    "kicker": "10 — FAQ",
+    "title": "Everything you need to know",
+    "items": [
+      { "q": "How much does the Space Cabin cost?", "a": "It depends on the version, your customisations and the installation site. You can see base prices in the comparison section, and a consultation will give you the final figure." },
+      { "q": "How long do production and delivery take?", "a": "Production takes 30–45 days depending on the version. On-site installation takes a single day." },
+      { "q": "Does it need a concrete foundation?", "a": "No. The cabin stands on adjustable galvanised legs. A levelled, compacted surface or a few small concrete pads is enough." },
+      { "q": "How does it perform in extreme heat or cold?", "a": "Up to 100 mm of PU insulation and Low-E double glazing keep it comfortable in cold mountain climates and hot southern ones alike." },
+      { "q": "Do I need a permit?", "a": "The cabin is a relocatable structure, but local rules vary. Our team will guide you during the consultation." },
+      { "q": "What can the smart system do?", "a": "It controls lighting, climate, motorised blinds and the digital lock. Zenith adds cameras and an alarm. Everything works from the mobile app, even remotely." },
+      { "q": "Can I pay in instalments?", "a": "Yes. Payments are staged with production progress, and instalment plans are available on selected versions." },
+      { "q": "What about warranty and after-sales service?", "a": "The structure is covered for up to 10 years and equipment for 2 years, with after-sales service nationwide." }
+    ]
+  },
+  "contact": {
+    "kicker": "11 — Get started",
+    "title": "Your cabin is one form away",
+    "text": "Fill in the form and a specialist will call you within 2 business hours.",
+    "modes": { "consult": "Consultation", "visit": "Book a showroom visit" },
+    "fields": { "name": "Full name", "mobile": "Mobile number", "city": "City", "use": "Intended use", "version": "Preferred version", "message": "Notes (optional)" },
+    "placeholders": { "name": "e.g. Sara Mohammadi", "mobile": "0912 123 4567", "city": "e.g. Tehran", "message": "Your site, timing, or any questions…" },
+    "useOptions": ["Villa & second home", "Eco-tourism & glamping", "Office & studio", "Hotel & resort", "Site camp", "Café & retail", "Other"],
+    "choose": "Select",
+    "versionAny": "Not sure yet",
+    "submit": "Send request",
+    "sending": "Sending…",
+    "successTitle": "Request received",
+    "success": "A specialist will contact you shortly. Reference:",
+    "error": "Something went wrong. Please try again or call us directly.",
+    "errors": { "required": "This field is required", "mobile": "Please enter a valid Iranian mobile number (e.g. 09121234567)", "name": "Please enter your full name", "spam": "Your request looked like spam." },
+    "privacy": "We only use your details to get in touch with you.",
+    "callTitle": "Prefer to talk?",
+    "callText": "Sat–Thu, 9:00–18:00 (Tehran time)",
+    "callCta": "Call us",
+    "whatsapp": "Message on WhatsApp",
+    "addressTitle": "Display site",
+    "address": "Tehran. We'll send the exact address when you book."
+  },
+  "footer": {
+    "about": "Space Cabin is a product of Mammut Structures, specialists in lightweight and prefabricated structures.",
+    "explore": "Sections",
+    "contact": "Contact",
+    "social": "Social",
+    "mammut": "Mammut website",
+    "rights": "All rights reserved, Mammut Structures.",
+    "concept": "Concept demo. The model, images, prices and contact details are placeholders.",
+    "top": "Back to top"
+  },
+  "mobileBar": { "call": "Call", "consult": "Free consultation" },
+  "a11y": { "skip": "Skip to main content", "menu": "Menu", "close": "Close menu", "home": "Home" }
+}

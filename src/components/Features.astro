@@ -1,0 +1,144 @@
+---
+import Icon from './Icon.astro';
+import { digits } from '../i18n.js';
+const { t } = Astro.props;
+const f = t.features;
+const L = t.lang;
+const order = ['frame', 'shell', 'insulation', 'smart', 'glass', 'bolt', 'sun', 'move'];
+const items = order.map((k) => f.items.find((i) => i.icon === k));
+const layers = L === 'fa'
+  ? [['پوسته فایبرگلاس', '۸mm'], ['عایق پلی‌یورتان', '۱۰۰mm'], ['لایه بخاربند', '۰٫۲mm'], ['دیوار داخلی', '۱۲mm']]
+  : [['Fibreglass shell', '8 mm'], ['PU insulation', '100 mm'], ['Vapour barrier', '0.2 mm'], ['Interior lining', '12 mm']];
+---
+<section class="section feat" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker" data-reveal>{f.kicker}</span>
+      <h2 class="h-lg" data-split>{f.title}</h2>
+      <p class="lead" data-reveal>{f.text}</p>
+    </div>
+
+    <div class="bento" data-stagger>
+      {items.map((it, i) => (
+        <article class={`card glow tile tile--${it.icon}`} data-glow>
+          <div class="tile__head">
+            <span class="tile__icon"><Icon name={it.icon} size={26} /></span>
+            <span class="tile__idx num">{digits(String(i + 1).padStart(2, '0'), L)}</span>
+          </div>
+          <h3>{it.title}</h3>
+          <p>{it.text}</p>
+
+          {it.icon === 'insulation' && (
+            <div class="layers" aria-hidden="true">
+              {layers.map(([name, mm], j) => (
+                <div class={`layer layer--${j}`}><span>{name}</span><b class="num">{mm}</b></div>
+              ))}
+              <div class="heat"><i></i><i></i><i></i></div>
+            </div>
+          )}
+
+          {it.icon === 'smart' && (
+            <div class="phone" aria-hidden="true">
+              <div class="phone__dial">
+                <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" class="trk" /><circle cx="60" cy="60" r="50" class="val" data-dial /></svg>
+                <b class="latin">22.5°</b>
+                <small class="latin">CLIMATE · AUTO</small>
+              </div>
+              <ul class="phone__toggles latin">
+                <li class="on"><i></i>LIGHTS</li>
+                <li class="on"><i></i>LOCK</li>
+                <li><i></i>BLINDS</li>
+                <li class="on"><i></i>LED</li>
+              </ul>
+            </div>
+          )}
+        </article>
+      ))}
+      <a class="card tile tile--cta" href="#viewer" data-track="cta_click" data-track-label="features_to_3d">
+        <span class="tile__icon"><Icon name="cube" size={26} /></span>
+        <b>{t.viewer.title}</b>
+        <span class="tile__go"><Icon name="arrow" class="flip" /></span>
+      </a>
+    </div>
+
+    <ul class="counters">
+      {f.counters.map((c) => (
+        <li data-reveal>
+          <b class="num"><span data-count={c.value} data-lang={L}>{digits(c.value, L)}</span><small>{c.suffix}</small></b>
+          <span>{c.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .bento { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .bento { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1040px) {
+    .bento { grid-template-columns: repeat(4, 1fr); }
+    .tile--insulation, .tile--smart, .tile--cta { grid-column: span 2; }
+  }
+  .tile { padding: clamp(22px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 12px; min-height: 250px; overflow: hidden; transition: translate 0.6s var(--ease-out), border-color 0.3s; }
+  .tile:hover { translate: 0 -4px; }
+  .tile__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: auto; padding-bottom: 28px; }
+  .tile__icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; border: 1px solid var(--line-2); background: linear-gradient(180deg, rgb(255 255 255 / 0.08), transparent); color: var(--accent-2); }
+  .tile__idx { font-size: 0.8rem; color: var(--dim); }
+  .tile h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
+  .tile p { color: var(--muted); font-size: 0.93rem; }
+
+  .tile--insulation, .tile--smart { display: grid; grid-template-columns: 1fr; align-content: start; }
+  @media (min-width: 640px) {
+    .tile--insulation, .tile--smart { grid-template-columns: 1fr 1fr; column-gap: 28px; }
+    .tile--insulation > :not(.layers), .tile--smart > :not(.phone) { grid-column: 1; }
+    .layers, .phone { grid-column: 2; grid-row: 1 / span 3; }
+  }
+
+  .layers { position: relative; display: grid; grid-template-columns: 0.8fr 2fr 0.6fr 0.9fr; min-height: 200px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
+  .layer { position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; font-size: 0.65rem; color: rgb(0 0 0 / 0.7); }
+  .layer span { writing-mode: vertical-rl; transform: rotate(180deg); position: absolute; top: 10px; inset-inline-start: 50%; translate: -50% 0; white-space: nowrap; font-weight: 600; }
+  :global([dir='rtl']) .layer span { translate: 50% 0; }
+  .layer b { font-size: 0.65rem; font-weight: 600; white-space: nowrap; }
+  .layer--0 { background: #f2f3f5; }
+  .layer--1 { background: repeating-linear-gradient(45deg, #ffcf6b 0 8px, #ffc14a 8px 16px); }
+  .layer--2 { background: #3a8ee6; color: #fff; }
+  .layer--3 { background: #d9c4a8; }
+  .layer--2 span { color: #fff; }
+  .heat { position: absolute; inset: 0; pointer-events: none; }
+  .heat i { position: absolute; inset-inline-start: -30%; width: 34%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, #ff5a2a); animation: heat 2.8s var(--ease-io) infinite; }
+  :global([dir='rtl']) .heat i { background: linear-gradient(270deg, transparent, #ff5a2a); }
+  .heat i:nth-child(1) { top: 25%; }
+  .heat i:nth-child(2) { top: 50%; animation-delay: 0.6s; }
+  .heat i:nth-child(3) { top: 75%; animation-delay: 1.2s; }
+  @keyframes heat { 0% { transform: translateX(0); opacity: 0; } 20% { opacity: 1; } 70% { transform: translateX(calc(var(--hx, 1) * 150%)); opacity: 1; } 100% { transform: translateX(calc(var(--hx, 1) * 150%)); opacity: 0; } }
+  :global([dir='rtl']) .heat { --hx: -1; }
+
+  .phone { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; padding: 18px; border-radius: 22px; border: 1px solid var(--line-2); background: radial-gradient(120% 120% at 20% 0%, rgb(255 122 26 / 0.14), transparent 60%), #0c0f14; min-height: 200px; }
+  .phone__dial { position: relative; width: 132px; aspect-ratio: 1; display: grid; place-items: center; align-content: center; }
+  .phone__dial svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .phone__dial circle { fill: none; stroke-width: 6; stroke-linecap: round; }
+  .phone__dial .trk { stroke: rgb(255 255 255 / 0.08); }
+  .phone__dial .val { stroke: var(--accent); stroke-dasharray: 314; stroke-dashoffset: 314; filter: drop-shadow(0 0 6px rgb(255 122 26 / 0.7)); }
+  .phone__dial b { font-size: 1.6rem; font-weight: 600; line-height: 1; }
+  .phone__dial small { font-size: 0.5rem; letter-spacing: 0.18em; color: var(--muted); }
+  .phone__toggles { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 0.66rem; letter-spacing: 0.14em; color: var(--muted); }
+  .phone__toggles li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 10px; background: rgb(255 255 255 / 0.04); }
+  .phone__toggles i { order: 2; width: 26px; height: 15px; border-radius: 99px; background: rgb(255 255 255 / 0.14); position: relative; transition: background 0.3s; }
+  .phone__toggles i::after { content: ''; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: #fff; transition: transform 0.3s var(--ease-out); }
+  .phone__toggles li.on i { background: var(--good); }
+  .phone__toggles li.on i::after { transform: translateX(11px); }
+  .phone__toggles li.on { color: var(--text); }
+
+  .tile--cta { flex-direction: row; align-items: center; gap: 18px; min-height: 120px; background: linear-gradient(120deg, rgb(255 122 26 / 0.16), rgb(127 233 255 / 0.06)); }
+  .tile--cta b { font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem); font-weight: 700; flex: 1; }
+  .tile__go { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #140a02; transition: transform 0.5s var(--ease-out); }
+  .tile--cta:hover .tile__go { transform: rotate(calc(var(--dirx, 1) * -45deg)); }
+  :global([dir='rtl']) .tile__go :global(svg) { transform: scaleX(-1); }
+
+  .counters { list-style: none; margin: clamp(56px, 8vw, 110px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
+  @media (min-width: 900px) { .counters { grid-template-columns: repeat(4, 1fr); } }
+  .counters li { padding: 28px 4px 0; display: grid; gap: 6px; }
+  .counters b { font-size: clamp(2.6rem, 1.6rem + 4vw, 5.2rem); font-weight: 600; line-height: 1; display: flex; align-items: baseline; gap: 6px; letter-spacing: -0.04em; }
+  .counters small { font-size: 0.35em; color: var(--accent); letter-spacing: 0; }
+  .counters li > span { color: var(--muted); font-size: 0.92rem; }
+</style>

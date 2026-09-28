@@ -1,0 +1,76 @@
+---
+import Icon from './Icon.astro';
+import { shared } from '../i18n.js';
+const { t } = Astro.props;
+const f = t.footer;
+const { contact } = shared;
+const socials = [
+  ['instagram', contact.instagram, 'Instagram'],
+  ['telegram', contact.telegram, 'Telegram'],
+  ['linkedin', contact.linkedin, 'LinkedIn'],
+  ['aparat', contact.aparat, 'Aparat'],
+];
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr__word latin" aria-hidden="true" data-footer-word>SPACE<span>CABIN</span></div>
+    <div class="ftr__grid">
+      <div class="ftr__about">
+        <p>{f.about}</p>
+        <a class="btn btn--ghost btn--sm" href={contact.mammutUrl} target="_blank" rel="noopener" data-track="outbound_click" data-track-label="mammut">
+          {f.mammut}<Icon name="arrow" class="flip" />
+        </a>
+      </div>
+      <nav aria-label={f.explore}>
+        <h3>{f.explore}</h3>
+        <ul>
+          {t.nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+          <li><a href="#contact">{t.navCta}</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h3>{f.contact}</h3>
+        <ul>
+          <li><a class="latin" dir="ltr" href={`tel:${contact.phone}`} data-track="call_click" data-track-label="footer">{contact.phone}</a></li>
+          <li><a class="latin" href={`mailto:${contact.email}`} data-track="email_click">{contact.email}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>{f.social}</h3>
+        <ul class="ftr__social">
+          {socials.map(([icon, href, label]) => (
+            <li><a href={href} target="_blank" rel="noopener" aria-label={label} data-track="social_click" data-track-label={icon}><Icon name={icon} size={20} /></a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <p>© <span class="num">{year}</span> {f.rights}</p>
+      <p class="ftr__concept">{f.concept} · <span class="latin">Concept design &amp; development by <a href="https://github.com/Rashiin" target="_blank" rel="noopener">Rashiin</a></span></p>
+      <a href="#top" class="ftr__top">{f.top} ↑</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr { position: relative; border-top: 1px solid var(--line); padding-top: clamp(40px, 6vw, 80px); padding-bottom: calc(24px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, var(--bg), #040506); overflow: hidden; }
+  .ftr__word { font-size: clamp(3.6rem, 16.5vw, 17rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.06em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.14); display: flex; gap: 0.12em; justify-content: center; direction: ltr; user-select: none; }
+  .ftr__word span { color: var(--accent); -webkit-text-stroke: 0; opacity: 0.9; }
+  .ftr__grid { display: grid; gap: 32px; margin-top: clamp(40px, 6vw, 80px); grid-template-columns: 1fr 1fr; }
+  @media (min-width: 900px) { .ftr__grid { grid-template-columns: 2fr 1fr 1.3fr 1fr; } }
+  .ftr__about { grid-column: 1 / -1; display: grid; gap: 18px; justify-items: start; max-width: 42ch; }
+  @media (min-width: 900px) { .ftr__about { grid-column: auto; } }
+  .ftr__about p { color: var(--muted); }
+  .ftr h3 { font-size: 0.8rem; font-weight: 600; color: var(--dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+  .ftr ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .ftr ul a { color: #c5ccd6; transition: color 0.2s; }
+  .ftr ul a:hover { color: var(--accent-2); }
+  .ftr__social { display: flex !important; gap: 8px !important; flex-wrap: wrap; }
+  .ftr__social a { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); display: grid; place-items: center; transition: background 0.25s, color 0.25s, border-color 0.25s; }
+  .ftr__social a:hover { background: var(--accent); color: #140a02; border-color: var(--accent); }
+  .ftr__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--dim); }
+  .ftr__concept a { color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px; }
+  .ftr__top:hover { color: var(--text); }
+  @media (max-width: 720px) { .ftr { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } }
+</style>
