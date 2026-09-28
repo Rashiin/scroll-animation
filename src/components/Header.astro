@@ -1,0 +1,104 @@
+---
+import Icon from './Icon.astro';
+import { url, pathFor } from '../i18n.js';
+const { t } = Astro.props;
+const other = t.lang === 'fa' ? 'en' : 'fa';
+---
+<header class="hdr" data-header>
+  <div class="hdr__bar wrap">
+    <a class="brand" href={url(pathFor(t.lang))} aria-label={`${t.brand.name} — ${t.a11y.home}`}>
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="3" y="11" width="34" height="18" rx="9" fill="none" stroke="currentColor" stroke-width="2.2" />
+        <rect x="11" y="16" width="17" height="8" rx="4" fill="var(--accent)" />
+        <circle cx="31" cy="20" r="1.6" fill="var(--cyan)" />
+      </svg>
+      <span class="brand__txt">
+        <b class="latin">SPACE CABIN</b>
+        <small class="latin">by {t.brand.wordmark}</small>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        {t.nav.map((n) => <li><a href={n.href} data-nav>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <a class="lang" href={url(pathFor(other))} hreflang={other} lang={other} aria-label={t.langSwitch.label} data-track="lang_switch">
+        <Icon name="globe" size={16} />
+        <span>{t.langSwitch.short}</span>
+      </a>
+      <a class="btn btn--primary btn--sm hdr__cta" href="#contact" data-track="cta_click" data-track-label="header">{t.navCta}</a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" data-burger>
+        <span class="sr-only">{t.a11y.menu}</span>
+        <i></i><i></i>
+      </button>
+    </div>
+  </div>
+  <div class="progress" aria-hidden="true"><span data-progress></span></div>
+
+  <div class="mnav" id="mnav" data-mnav hidden>
+    <ul>
+      {t.nav.map((n, i) => (
+        <li style={`--i:${i}`}><a href={n.href} data-nav><span class="num">0{i + 1}</span>{n.label}</a></li>
+      ))}
+    </ul>
+    <a class="btn btn--primary" href="#contact" data-nav data-track="cta_click" data-track-label="mobile_menu">{t.navCta}</a>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: fixed; inset: 0 0 auto; z-index: 50; height: var(--header-h);
+    transition: transform 0.5s var(--ease-out), background 0.4s, border-color 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  .hdr.is-scrolled {
+    background: rgb(7 9 12 / 0.72); border-color: var(--line);
+    backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  }
+  .hdr.is-hidden { transform: translateY(-100%); }
+  .hdr__bar { height: 100%; display: flex; align-items: center; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-inline-end: auto; }
+  .brand__mark { width: 38px; height: 38px; color: var(--text); }
+  .brand__txt { display: grid; line-height: 1.05; }
+  .brand__txt b { font-size: 0.95rem; letter-spacing: 0.16em; font-weight: 700; }
+  .brand__txt small { font-size: 0.62rem; letter-spacing: 0.3em; color: var(--muted); }
+
+  .nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 4px; border-radius: 999px; border: 1px solid var(--line); background: rgb(255 255 255 / 0.03); }
+  .nav a { display: block; padding: 7px 16px; border-radius: 999px; font-size: 0.9rem; color: var(--muted); transition: color 0.25s, background 0.25s; }
+  .nav a:hover, .nav a.is-active { color: var(--text); background: rgb(255 255 255 / 0.07); }
+
+  .hdr__actions { display: flex; align-items: center; gap: 10px; }
+  .lang { display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.85rem; font-weight: 600; color: var(--muted); transition: color 0.2s, border-color 0.2s; }
+  .lang:hover { color: var(--text); border-color: var(--line-2); }
+
+  .progress { position: absolute; inset: auto 0 -1px; height: 2px; }
+  .progress span { display: block; height: 100%; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--accent), var(--cyan)); }
+  :global([dir='rtl']) .progress span { transform-origin: 100% 50%; }
+
+  .burger { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--surface); position: relative; }
+  .burger i { position: absolute; inset-inline-start: 13px; width: 18px; height: 1.6px; background: currentColor; transition: transform 0.4s var(--ease-out), width 0.3s; }
+  .burger i:first-of-type { top: 17px; }
+  .burger i:last-of-type { top: 25px; width: 11px; }
+  .burger[aria-expanded='true'] i:first-of-type { transform: translateY(4px) rotate(45deg); }
+  .burger[aria-expanded='true'] i:last-of-type { width: 18px; transform: translateY(-4px) rotate(-45deg); }
+
+  .mnav[hidden] { display: none; }
+  .mnav { position: fixed; inset: var(--header-h) 0 0; background: rgb(7 9 12 / 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 32px var(--gutter) calc(32px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 32px; }
+  .mnav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .mnav li { opacity: 0; transform: translateY(16px); transition: opacity 0.5s var(--ease-out) calc(var(--i) * 60ms), transform 0.5s var(--ease-out) calc(var(--i) * 60ms); }
+  .mnav.is-open li { opacity: 1; transform: none; }
+  .mnav li a { display: flex; align-items: baseline; gap: 16px; font-size: 2rem; font-weight: 800; padding-block: 10px; border-bottom: 1px solid var(--line); }
+  .mnav li a .num { font-size: 0.8rem; color: var(--accent); font-weight: 500; }
+
+  @media (max-width: 960px) {
+    .nav { display: none; }
+    .burger { display: block; }
+  }
+  @media (max-width: 560px) {
+    .hdr__cta { display: none; }
+    .brand__txt small { display: none; }
+  }
+</style>

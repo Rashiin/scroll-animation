@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+const { t } = Astro.props;
+const f = t.faq;
+---
+<section class="section faq" id="faq">
+  <div class="wrap faq__grid">
+    <div class="faq__head">
+      <span class="kicker" data-reveal>{f.kicker}</span>
+      <h2 class="h-lg" data-split>{f.title}</h2>
+    </div>
+    <div class="faq__list" data-faq>
+      {f.items.map((it, i) => (
+        <details class="qa" data-reveal name="faq" open={i === 0}>
+          <summary data-track="faq_open" data-track-label={String(i + 1)}>
+            <h3>{it.q}</h3>
+            <span class="qa__ic"><Icon name="plus" size={18} /></span>
+          </summary>
+          <div class="qa__a"><p>{it.a}</p></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq__grid { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .faq__grid { grid-template-columns: 0.8fr 1.2fr; gap: 80px; } .faq__head { position: sticky; top: calc(var(--header-h) + 40px); align-self: start; } }
+  .faq__head { display: grid; gap: 18px; }
+  .faq__list { display: grid; }
+  .qa { border-bottom: 1px solid var(--line); }
+  .qa:first-child { border-top: 1px solid var(--line); }
+  .qa summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 0; }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa h3 { font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem); font-weight: 700; letter-spacing: 0; line-height: 1.5; }
+  :global(:root[lang='en']) .qa h3 { font-weight: 500; letter-spacing: -0.01em; line-height: 1.35; }
+  .qa__ic { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line-2); display: grid; place-items: center; transition: transform 0.5s var(--ease-out), background 0.3s, color 0.3s; }
+  .qa[open] .qa__ic { transform: rotate(135deg); background: var(--accent); color: #140a02; border-color: var(--accent); }
+  .qa summary:hover h3 { color: var(--accent-2); }
+  .qa__a { padding: 0 0 26px; color: var(--muted); max-width: 64ch; }
+  .qa[open] .qa__a { animation: qa 0.5s var(--ease-out); }
+  @keyframes qa { from { opacity: 0; transform: translateY(-6px); } }
+</style>

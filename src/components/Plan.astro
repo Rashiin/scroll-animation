@@ -1,0 +1,155 @@
+---
+import { digits } from '../i18n.js';
+const { t } = Astro.props;
+const p = t.plan;
+const L = t.lang;
+// Plan in centimetres-ish units: 100 = 1 m. Cabin footprint 1200 × 350, front (door) side at the bottom.
+const Z = {
+  bath: { x: 20, y: 12, w: 150, h: 168, lx: 72, ly: 152 },
+  entry: { x: 20, y: 180, w: 310, h: 158, lx: 250, ly: 232 },
+  kitchen: { x: 330, y: 12, w: 250, h: 326, lx: 455, ly: 300 },
+  living: { x: 580, y: 12, w: 325, h: 326, lx: 742, ly: 300 },
+  bed: { x: 905, y: 12, w: 275, h: 326, lx: 1040, ly: 300 },
+  deck: { x: 70, y: 352, w: 370, h: 228, lx: 255, ly: 478 },
+};
+const zones = p.zones.map((z, i) => ({ ...z, ...Z[z.id], n: i + 1 }));
+---
+<section class="section plan" id="plan">
+  <div class="wrap">
+    <div class="section-head section-head--split">
+      <div>
+        <span class="kicker" data-reveal>{p.kicker}</span>
+        <h2 class="h-lg" data-split>{p.title}</h2>
+      </div>
+      <p class="lead" data-reveal>{p.text}</p>
+    </div>
+
+    <div class="plan__grid">
+      <figure class="plan__fig card" data-plan>
+        <svg viewBox="-60 -80 1320 720" role="img" aria-label={p.title} class="plan__svg" direction="ltr">
+          <defs>
+            <pattern id="deckp" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M0 0v26" stroke="rgb(255 179 107 / .35)" stroke-width="2" /></pattern>
+            <pattern id="gridp" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0v50" fill="none" stroke="rgb(255 255 255 / .04)" /></pattern>
+          </defs>
+          <rect class="plan__gridbg" x="-60" y="-80" width="1320" height="720" fill="url(#gridp)" />
+
+          <!-- zones (interactive) -->
+          {zones.map((z) => (
+            <g class="zone" data-zone={z.id} tabindex="0" role="button" aria-label={`${z.title} — ${z.area} m²`}>
+              <rect x={z.x} y={z.y} width={z.w} height={z.h} rx="10" class={z.id === 'deck' ? 'zone__fill zone__fill--deck' : 'zone__fill'} />
+              <circle cx={z.x + 34} cy={z.y + 34} r="18" class="zone__n" />
+              <text x={z.x + 34} y={z.y + 40} class="zone__nt">{z.n}</text>
+              <text x={z.lx} y={z.ly} class="zone__area">{z.area}<tspan class="zone__unit"> m²</tspan></text>
+            </g>
+          ))}
+
+          <!-- shell walls -->
+          <g class="draw walls">
+            <rect x="0" y="0" width="1200" height="350" rx="26" pathLength="1" />
+            <rect x="12" y="12" width="1176" height="326" rx="18" pathLength="1" opacity=".35" />
+          </g>
+          <!-- partitions -->
+          <g class="draw parts">
+            <path d="M170 12V180H20" pathLength="1" />
+            <path d="M905 12V190" pathLength="1" />
+          </g>
+          <!-- glazing -->
+          <g class="glaze">
+            <path d="M345 350H1075" /><path d="M440 0H1060" /><path d="M100 0H170" />
+          </g>
+          <!-- door + swing -->
+          <g class="draw door">
+            <path d="M185 350V255" pathLength="1" />
+            <path d="M185 255A95 95 0 0 1 280 350" pathLength="1" stroke-dasharray="6 6" />
+          </g>
+          <!-- furniture -->
+          <g class="draw furn">
+            <rect x="945" y="60" width="190" height="170" rx="10" pathLength="1" />
+            <rect x="960" y="72" width="70" height="40" rx="8" pathLength="1" /><rect x="960" y="178" width="70" height="40" rx="8" pathLength="1" />
+            <rect x="620" y="22" width="220" height="80" rx="14" pathLength="1" />
+            <rect x="680" y="150" width="100" height="56" rx="8" pathLength="1" />
+            <rect x="340" y="22" width="220" height="62" rx="4" pathLength="1" />
+            <circle cx="400" cy="53" r="14" pathLength="1" /><circle cx="450" cy="53" r="14" pathLength="1" />
+            <rect x="380" y="170" width="120" height="70" rx="6" pathLength="1" />
+            <rect x="30" y="22" width="80" height="80" rx="6" pathLength="1" />
+            <ellipse cx="140" cy="140" rx="18" ry="24" pathLength="1" />
+            <rect x="30" y="220" width="30" height="110" rx="4" pathLength="1" />
+          </g>
+          <rect class="deckfill" x="70" y="352" width="370" height="228" rx="6" fill="url(#deckp)" />
+
+          <!-- dimensions -->
+          <g class="dims">
+            <path d="M0 -40H1200M0 -52v24M1200 -52v24" />
+            <text x="600" y="-52">12.00 m</text>
+            <path d="M1240 0V350M1228 0h24M1228 350h24" />
+            <text x="1250" y="182" class="rot" transform="rotate(90 1250 175)">3.50 m</text>
+          </g>
+          <text x="1190" y="620" class="north" text-anchor="end">N ↑ · 1:100</text>
+        </svg>
+        <figcaption class="plan__dims">
+          <span>{p.dims.length}</span><span>×</span><span>{p.dims.width}</span><span class="sep"></span><span>{p.dims.height}</span>
+        </figcaption>
+      </figure>
+
+      <ul class="plan__list" role="list">
+        {zones.map((z) => (
+          <li>
+            <button type="button" class="pz" data-zone-btn={z.id} aria-pressed="false">
+              <span class="pz__n num">{digits(z.n, L)}</span>
+              <span class="pz__body">
+                <span class="pz__row"><b>{z.title}</b><span class="num">{z.area} <small>m²</small></span></span>
+                <span class="pz__text">{z.text}</span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <p class="plan__note">{p.note}</p>
+  </div>
+</section>
+
+<style>
+  .plan__grid { display: grid; gap: 16px; }
+  @media (min-width: 1100px) { .plan__grid { grid-template-columns: 1fr 360px; align-items: start; } }
+  @media (max-width: 700px) { .plan__gridbg { display: none; } }
+  .plan__fig { margin: 0; padding: clamp(14px, 2vw, 28px); overflow: hidden; }
+  .plan__svg { width: 100%; height: auto; font-family: var(--font-latin); }
+  .draw { fill: none; stroke: #e8edf3; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .walls { stroke-width: 6; }
+  .furn { stroke: rgb(232 237 243 / 0.55); stroke-width: 2; }
+  :global(.js) .draw > * { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  :global(.js) .door path:last-child { stroke-dasharray: 0.02 0.02; }
+  .glaze path { stroke: var(--cyan); stroke-width: 7; stroke-linecap: round; filter: drop-shadow(0 0 6px rgb(127 233 255 / 0.8)); }
+  .deckfill { pointer-events: none; }
+  .dims path { stroke: var(--dim); stroke-width: 1.5; fill: none; }
+  .dims text, .north { fill: var(--muted); font-size: 22px; text-anchor: middle; letter-spacing: 0.08em; }
+  .north { font-size: 18px; fill: var(--dim); }
+
+  .zone { cursor: pointer; outline: none; }
+  .zone__fill { fill: rgb(255 255 255 / 0.02); stroke: transparent; stroke-width: 2; transition: fill 0.35s, stroke 0.35s; }
+  .zone__fill--deck { fill: rgb(255 179 107 / 0.05); stroke: rgb(255 179 107 / 0.3); stroke-dasharray: 8 6; }
+  .zone__n { fill: #0b0e13; stroke: var(--accent); stroke-width: 2; transition: fill 0.3s; }
+  .zone__nt { fill: var(--accent); font-size: 18px; font-weight: 700; text-anchor: middle; transition: fill 0.3s; }
+  .zone__area { fill: rgb(255 255 255 / 0.85); font-size: 28px; font-weight: 600; text-anchor: middle; letter-spacing: -0.02em; transition: fill 0.3s; }
+  .zone__unit { font-size: 18px; fill: var(--muted); }
+  .zone:hover .zone__fill, .zone:focus-visible .zone__fill, .zone.is-active .zone__fill { fill: rgb(255 122 26 / 0.16); stroke: rgb(255 122 26 / 0.8); }
+  .zone.is-active .zone__n { fill: var(--accent); }
+  .zone.is-active .zone__nt { fill: #140a02; }
+  .zone.is-active .zone__area { fill: #fff; }
+
+  .plan__dims { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; font-size: 0.85rem; color: var(--muted); }
+  .plan__dims .sep { width: 1px; height: 14px; background: var(--line-2); }
+
+  .plan__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .pz { width: 100%; display: flex; gap: 14px; text-align: start; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); transition: border-color 0.25s, background 0.25s; }
+  .pz[aria-pressed='true'], .pz:hover { border-color: rgb(255 122 26 / 0.6); background: rgb(255 122 26 / 0.07); }
+  .pz__n { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--accent); color: var(--accent); font-size: 0.8rem; font-weight: 700; }
+  .pz[aria-pressed='true'] .pz__n { background: var(--accent); color: #140a02; }
+  .pz__body { display: grid; gap: 4px; flex: 1; }
+  .pz__row { display: flex; justify-content: space-between; gap: 12px; }
+  .pz__row small { color: var(--muted); }
+  .pz__text { display: none; font-size: 0.86rem; color: var(--muted); }
+  .pz[aria-pressed='true'] .pz__text { display: block; }
+  .plan__note { margin-top: 16px; font-size: 0.8rem; color: var(--dim); }
+</style>

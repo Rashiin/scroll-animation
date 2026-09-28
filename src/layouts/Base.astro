@@ -1,0 +1,119 @@
+---
+import '../styles/global.css';
+import { abs, url, pathFor, shared } from '../i18n.js';
+
+const { t } = Astro.props;
+const lang = t.lang;
+const canonical = abs(pathFor(lang));
+const ogImage = abs('og.png');
+const { contact, analytics, video, versions } = shared;
+const gtm = analytics.gtmId;
+
+// ── Structured data (schema.org) ───────────────────────────────────────────
+const org = {
+  '@type': 'Organization',
+  '@id': `${abs('/')}#org`,
+  name: t.brand.company,
+  url: contact.mammutUrl,
+  logo: abs('favicon.svg'),
+  email: contact.email,
+  telephone: contact.phone,
+  sameAs: [contact.instagram, contact.linkedin, contact.telegram, contact.aparat],
+};
+const prices = versions.map((v) => v.price * 10); // Toman → Rial (ISO 4217: IRR)
+const product = {
+  '@type': 'Product',
+  name: `${t.brand.name} — ${t.brand.company}`,
+  description: t.meta.description,
+  image: [abs('og.png')],
+  brand: { '@type': 'Brand', name: 'Mammut' },
+  manufacturer: { '@id': `${abs('/')}#org` },
+  category: 'Prefabricated modular cabin',
+  additionalProperty: [
+    { '@type': 'PropertyValue', name: 'Floor area', value: 42, unitCode: 'MTK' },
+    { '@type': 'PropertyValue', name: 'Length', value: 12, unitCode: 'MTR' },
+    { '@type': 'PropertyValue', name: 'Width', value: 3.5, unitCode: 'MTR' },
+  ],
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'IRR',
+    lowPrice: Math.min(...prices),
+    highPrice: Math.max(...prices),
+    offerCount: versions.length,
+    availability: 'https://schema.org/PreOrder',
+    offers: versions.map((v) => ({
+      '@type': 'Offer',
+      name: t.versions.items[v.id].name,
+      price: v.price * 10,
+      priceCurrency: 'IRR',
+      availability: 'https://schema.org/PreOrder',
+    })),
+  },
+};
+const faq = {
+  '@type': 'FAQPage',
+  mainEntity: t.faq.items.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+const videoObj = {
+  '@type': 'VideoObject',
+  name: `${t.brand.name} — ${t.teaser.title}`,
+  description: t.teaser.text,
+  thumbnailUrl: abs('og.png'),
+  uploadDate: video.uploadDate,
+  duration: video.duration,
+  contentUrl: abs(video.mp4),
+  inLanguage: lang,
+};
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': [org, product, faq, videoObj] });
+---
+<!doctype html>
+<html lang={lang} dir={t.dir} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="fa" href={abs(pathFor('fa'))} />
+    <link rel="alternate" hreflang="en" href={abs(pathFor('en'))} />
+    <link rel="alternate" hreflang="x-default" href={abs(pathFor('fa'))} />
+    <meta name="theme-color" content="#07090c" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+    <link rel="sitemap" href={url('sitemap.xml')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={t.brand.name} />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={t.ogLocale} />
+    <meta property="og:locale:alternate" content={lang === 'fa' ? 'en_US' : 'fa_IR'} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.meta.ogAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+    <slot name="head" />
+    <script type="application/ld+json" set:html={jsonLd} />
+    {gtm && (
+      <script is:inline define:vars={{ gtm }}>
+        (function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+          var f = d.getElementsByTagName(s)[0], j = d.createElement(s); j.async = true;
+          j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', gtm);
+      </script>
+    )}
+  </head>
+  <body data-lang={lang}>
+    <a class="skip" href="#main">{t.a11y.skip}</a>
+    <slot />
+  </body>
+</html>

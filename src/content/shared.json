@@ -1,0 +1,47 @@
+{
+  "_readme": "Language-independent settings. Prices are in Toman. Edit and rebuild — no code changes needed.",
+  "siteUrl": "https://rashiin.github.io/scroll-animation",
+  "contact": {
+    "phone": "+982100000000",
+    "whatsapp": "989120000000",
+    "email": "info@mammut.example",
+    "instagram": "https://instagram.com/",
+    "linkedin": "https://linkedin.com/",
+    "telegram": "https://t.me/",
+    "aparat": "https://aparat.com/",
+    "mammutUrl": "https://mammut.example"
+  },
+  "form": {
+    "_readme": "endpoint: URL of server/lead.php (or any API that accepts JSON). Empty = demo mode (no network request).",
+    "endpoint": "",
+    "minFillSeconds": 3
+  },
+  "analytics": {
+    "_readme": "Google Tag Manager container ID, e.g. GTM-XXXXXXX. Empty = disabled (events are still pushed to window.dataLayer).",
+    "gtmId": ""
+  },
+  "video": {
+    "mp4": "video/teaser.mp4",
+    "webm": "video/teaser.webm",
+    "duration": "PT0M18S",
+    "uploadDate": "2026-09-28"
+  },
+  "versions": [
+    { "id": "orbit", "price": 1450000000, "insulation": 50, "delivery": 30 },
+    { "id": "nova", "price": 1890000000, "insulation": 75, "delivery": 35, "featured": true },
+    { "id": "pulsar", "price": 2380000000, "insulation": 100, "delivery": 40 },
+    { "id": "zenith", "price": 2950000000, "insulation": 100, "delivery": 45 }
+  ],
+  "matrix": [
+    { "key": "frame", "values": [true, true, true, true] },
+    { "key": "shell", "values": [true, true, true, true] },
+    { "key": "insulation", "values": ["50", "75", "100", "100"] },
+    { "key": "glazing", "values": ["double", "lowe", "lowe", "lowe_acoustic"] },
+    { "key": "smart", "values": ["light", "climate", "full", "full_security"] },
+    { "key": "bath", "values": [false, true, true, true] },
+    { "key": "kitchen", "values": ["kitchenette", "kitchenette", "full", "full"] },
+    { "key": "deck", "values": [false, false, true, true] },
+    { "key": "solar", "values": [false, "ready", "ready", "included"] },
+    { "key": "warranty", "values": ["5", "7", "10", "10"] }
+  ]
+}

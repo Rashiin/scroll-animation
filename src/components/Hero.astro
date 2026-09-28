@@ -1,0 +1,156 @@
+---
+import { getImage } from 'astro:assets';
+import Icon from './Icon.astro';
+import { digits } from '../i18n.js';
+import heroImg from '../assets/renders/hero.png';
+import heroMobileImg from '../assets/renders/hero-mobile.png';
+
+const { t } = Astro.props;
+const h = t.hero;
+const L = t.lang;
+
+// Art-directed LCP poster, rendered from the exact first frame of the 3D hero.
+const widthsD = [960, 1280, 1600];
+const widthsM = [390, 585, 780];
+const [dAvif, dWebp, mAvif, mWebp, fallback] = await Promise.all([
+  getImage({ src: heroImg, widths: widthsD, format: 'avif', quality: 58 }),
+  getImage({ src: heroImg, widths: widthsD, format: 'webp', quality: 72 }),
+  getImage({ src: heroMobileImg, widths: widthsM, format: 'avif', quality: 58 }),
+  getImage({ src: heroMobileImg, widths: widthsM, format: 'webp', quality: 72 }),
+  getImage({ src: heroImg, width: 1280, format: 'webp', quality: 72 }),
+]);
+---
+<section class="hero" id="top" data-hero>
+  <div class="hero__stage">
+    <picture class="hero__poster" data-hero-poster>
+      <source media="(max-aspect-ratio: 4/5)" type="image/avif" srcset={mAvif.srcSet.attribute} sizes="100vw" />
+      <source media="(max-aspect-ratio: 4/5)" type="image/webp" srcset={mWebp.srcSet.attribute} sizes="100vw" />
+      <source type="image/avif" srcset={dAvif.srcSet.attribute} sizes="100vw" />
+      <source type="image/webp" srcset={dWebp.srcSet.attribute} sizes="100vw" />
+      <img src={fallback.src} alt={t.meta.ogAlt} width="1600" height="1000" fetchpriority="high" decoding="async" />
+    </picture>
+    <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <div class="hero__hud latin" aria-hidden="true">
+      <span class="hud hud--tl">N 35.6892° · E 51.3890°</span>
+      <span class="hud hud--tr"><i class="blink"></i> {h.boot}</span>
+      <span class="hud hud--bl">L 12.00 · W 3.50 · H 3.55 m</span>
+      <span class="hud hud--br" data-hero-pct>000</span>
+      <span class="corner corner--1"></span><span class="corner corner--2"></span>
+      <span class="corner corner--3"></span><span class="corner corner--4"></span>
+    </div>
+
+    <div class="hero__content wrap">
+      <div class="hero__top" data-hero-top>
+        <span class="chip hero__chip" data-hero-in><span class="dot"></span>{h.eyebrow}</span>
+        <h1 class="hero__title h-xl">
+          <span class="line" data-hero-line><span>{h.titleA}</span></span>
+          <span class="line" data-hero-line><span class="grad-text">{h.titleB}</span></span>
+        </h1>
+      </div>
+
+      <div class="hero__bottom" data-hero-bottom>
+        <div class="hero__copy">
+          <p class="lead" data-hero-in>{h.lead}</p>
+          <div class="hero__ctas" data-hero-in>
+            <a class="btn btn--primary" href="#contact" data-magnetic data-track="cta_click" data-track-label="hero_consult" data-mode="consult">
+              {h.ctaPrimary}<Icon name="arrow" class="flip" />
+            </a>
+            <a class="btn btn--ghost" href="#contact" data-magnetic data-track="cta_click" data-track-label="hero_visit" data-mode="visit">
+              {h.ctaSecondary}
+            </a>
+          </div>
+        </div>
+        <ul class="hero__stats" data-hero-in>
+          {h.stats.map((s) => (
+            <li>
+              <b class="num">
+                <span data-count={s.value} data-decimals={s.decimals ?? 0} data-lang={L}>{digits(s.value, L)}</span>
+                <small>{s.suffix}</small>
+              </b>
+              <span>{s.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <a class="hero__scroll" href="#teaser" aria-label={h.scrollHint}>
+      <span>{h.scrollHint}</span>
+      <i></i>
+    </a>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; height: 200svh; }
+  .hero__stage { position: sticky; top: 0; height: 100svh; min-height: 560px; overflow: hidden; background: #0a0b0e; }
+  .hero__poster, .hero__poster img, .hero__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero__poster img { object-fit: cover; object-position: 50% 60%; }
+  .hero__canvas { opacity: 0; transition: opacity 1.2s var(--ease-out); }
+  .hero__canvas.is-live { opacity: 1; }
+  .hero__scrim {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(180deg, rgb(7 9 12 / 0.7) 0%, transparent 32%, transparent 58%, rgb(7 9 12 / 0.92) 100%),
+      radial-gradient(120% 70% at 50% 110%, rgb(7 9 12 / 0.6), transparent 60%);
+  }
+
+  .hero__content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-top: calc(var(--header-h) + clamp(20px, 4vh, 56px)); padding-bottom: clamp(24px, 5vh, 56px); pointer-events: none; }
+  .hero__content :is(a, button) { pointer-events: auto; }
+  .hero__top { display: grid; justify-items: start; gap: clamp(14px, 2vh, 24px); }
+  .hero__chip { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .hero__title { display: grid; line-height: 1.02; }
+  :global(:root[lang='fa']) .hero__title { line-height: 1.22; }
+  .hero__title .line { display: block; overflow: clip; padding-bottom: 0.06em; }
+  .hero__title .line > span { display: inline-block; }
+
+  .hero__bottom { display: grid; gap: 28px; align-items: end; }
+  @media (min-width: 1000px) { .hero__bottom { grid-template-columns: 1fr auto; gap: 48px; } }
+  .hero__copy { display: grid; gap: 22px; max-width: 560px; }
+  .hero__copy .lead { color: #c3cad4; }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .hero__stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, auto); border: 1px solid var(--line); border-radius: 18px; background: rgb(10 12 16 / 0.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .hero__stats li { display: grid; gap: 2px; padding: 14px 22px; }
+  .hero__stats li + li { border-inline-start: 1px solid var(--line); }
+  .hero__stats b { font-size: clamp(1.4rem, 1rem + 1.4vw, 2.1rem); font-weight: 600; line-height: 1; display: flex; align-items: baseline; gap: 4px; }
+  .hero__stats small { font-size: 0.8rem; color: var(--accent-2); font-weight: 500; }
+  .hero__stats li > span { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+
+  .hud { position: absolute; z-index: 2; font-size: 0.68rem; letter-spacing: 0.18em; color: rgb(255 255 255 / 0.45); display: flex; align-items: center; gap: 8px; }
+  .hud--tl { top: calc(var(--header-h) + 18px); left: var(--gutter); }
+  .hud--tr { top: calc(var(--header-h) + 18px); right: var(--gutter); color: var(--cyan); }
+  .hud--bl { bottom: 18px; left: var(--gutter); }
+  .hud--br { bottom: 18px; right: var(--gutter); font-variant-numeric: tabular-nums; }
+  .blink { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: blink 1.6s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0.2; } }
+  .corner { position: absolute; z-index: 2; width: 18px; height: 18px; border: 1px solid rgb(255 255 255 / 0.3); }
+  .corner--1 { top: calc(var(--header-h) + 6px); left: 8px; border-right: 0; border-bottom: 0; }
+  .corner--2 { top: calc(var(--header-h) + 6px); right: 8px; border-left: 0; border-bottom: 0; }
+  .corner--3 { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+  .corner--4 { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+  /* Top HUD labels would collide with the title on the start side. */
+  :global([dir='rtl']) .hud--tr, :global([dir='ltr']) .hud--tl { display: none; }
+
+  .hero__scroll { position: absolute; z-index: 3; left: 50%; bottom: 22px; transform: translateX(-50%); display: grid; justify-items: center; gap: 8px; font-size: 0.72rem; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+  .hero__scroll i { width: 1px; height: 38px; background: linear-gradient(var(--muted), transparent); position: relative; overflow: hidden; }
+  .hero__scroll i::after { content: ''; position: absolute; inset: 0; background: var(--accent); transform: translateY(-100%); animation: drip 2.2s var(--ease-io) infinite; }
+  @keyframes drip { 60%, 100% { transform: translateY(100%); } }
+
+  @media (max-width: 999px) {
+    .hero__scroll { display: none; }
+  }
+  @media (max-width: 720px) {
+    .hero__stats { grid-template-columns: repeat(4, 1fr); border-radius: 14px; }
+    .hero__stats li { padding: 10px 8px; text-align: center; justify-items: center; }
+    .hero__stats b { font-size: 1.25rem; }
+    .hero__stats small { font-size: 0.66rem; }
+    .hero__stats li > span { font-size: 0.66rem; white-space: normal; line-height: 1.3; }
+    .hero__ctas .btn { flex: 1 1 auto; }
+    .hero__copy .lead { font-size: 0.95rem; }
+    .hud--bl, .hud--br, .hud--tl, .hud--tr, .corner { display: none; }
+    .hero__bottom { gap: 18px; }
+  }
+</style>

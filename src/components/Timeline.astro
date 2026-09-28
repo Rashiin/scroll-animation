@@ -1,0 +1,52 @@
+---
+const { t } = Astro.props;
+const tl = t.timeline;
+---
+<section class="section tl" id="timeline">
+  <div class="wrap tl__grid">
+    <div class="tl__aside">
+      <div class="tl__sticky">
+        <span class="kicker" data-reveal>{tl.kicker}</span>
+        <h2 class="h-lg" data-split>{tl.title}</h2>
+        <p class="lead" data-reveal>{tl.text}</p>
+        <div class="tl__big num" aria-hidden="true"><span data-tl-day>01</span><small>/ 40</small></div>
+      </div>
+    </div>
+    <ol class="tl__list" data-timeline>
+      <span class="tl__rail" aria-hidden="true"><span data-tl-fill></span></span>
+      {tl.steps.map((s, i) => (
+        <li class="tl__step" data-tl-step data-day={[1, 3, 5, 6, 36, 38, 40][i]}>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <span class="tl__time">{s.time}</span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .tl__grid { display: grid; gap: 48px; }
+  @media (min-width: 1000px) { .tl__grid { grid-template-columns: 1fr 1.1fr; gap: 80px; } }
+  .tl__sticky { position: sticky; top: calc(var(--header-h) + 40px); display: grid; gap: 18px; }
+  .tl__big { margin-top: 24px; font-size: clamp(5rem, 3rem + 8vw, 11rem); font-weight: 600; line-height: 0.9; letter-spacing: -0.06em; color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.25); display: flex; align-items: baseline; gap: 12px; direction: ltr; justify-content: flex-start; }
+  :global([dir='rtl']) .tl__big { justify-content: flex-end; }
+  .tl__big span { color: var(--accent); -webkit-text-stroke: 0; font-family: var(--font-latin); }
+  .tl__big small { font-size: 0.22em; letter-spacing: 0; -webkit-text-stroke: 0; color: var(--dim); font-family: var(--font-latin); }
+  @media (max-width: 999px) { .tl__big { display: none; } }
+
+  .tl__list { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(28px, 5vw, 64px); padding-inline-start: 44px; }
+  .tl__rail { position: absolute; inset-block: 8px; inset-inline-start: 11px; width: 2px; background: var(--line); border-radius: 2px; }
+  .tl__rail span { position: absolute; inset: 0; background: linear-gradient(var(--accent), var(--cyan)); transform-origin: 50% 0; transform: scaleY(0); box-shadow: 0 0 12px var(--accent); }
+  .tl__step { position: relative; display: grid; gap: 8px; opacity: 0.35; transition: opacity 0.5s; }
+  .tl__step.is-on { opacity: 1; }
+  .tl__dot { position: absolute; inset-inline-start: -44px; top: 4px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--line-2); background: var(--bg); transition: border-color 0.4s, box-shadow 0.4s; }
+  .tl__dot::after { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: var(--accent); transform: scale(0); transition: transform 0.4s var(--ease-out); }
+  .tl__step.is-on .tl__dot { border-color: var(--accent); box-shadow: 0 0 18px rgb(255 122 26 / 0.6); }
+  .tl__step.is-on .tl__dot::after { transform: scale(1); }
+  .tl__time { font-size: 0.8rem; color: var(--accent-2); font-weight: 600; }
+  .tl__step h3 { font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.8rem); }
+  .tl__step p { color: var(--muted); max-width: 48ch; }
+  :global(:not(.js)) .tl__step { opacity: 1; }
+</style>

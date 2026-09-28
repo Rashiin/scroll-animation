@@ -1,0 +1,156 @@
+---
+import Icon from './Icon.astro';
+import { shared, digits, formatPrice } from '../i18n.js';
+const { t } = Astro.props;
+const v = t.versions;
+const L = t.lang;
+const cell = (val) => {
+  if (val === true) return { icon: 'check' };
+  if (val === false) return { icon: 'minus' };
+  return { text: v.values[val] ?? digits(val, L) };
+};
+---
+<section class="section vers" id="versions">
+  <div class="wrap">
+    <div class="section-head section-head--split">
+      <div>
+        <span class="kicker" data-reveal>{v.kicker}</span>
+        <h2 class="h-lg" data-split>{v.title}</h2>
+      </div>
+      <div class="vers__intro" data-reveal>
+        <p class="lead">{v.text}</p>
+        <label class="switch">
+          <input type="checkbox" data-price-toggle data-track="price_toggle" />
+          <span class="switch__ui" aria-hidden="true"></span>
+          <span>{v.showPrice}</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="vers__cards" data-stagger data-versions>
+      {shared.versions.map((ver, i) => {
+        const it = v.items[ver.id];
+        return (
+          <article class={`card glow vc ${ver.featured ? 'vc--featured' : ''}`} data-glow data-version={ver.id}>
+            {ver.featured && <span class="vc__badge">{v.featured}</span>}
+            <header>
+              <span class="vc__idx num">{digits(String(i + 1).padStart(2, '0'), L)}</span>
+              <h3>{it.name}</h3>
+              <p>{it.tagline}</p>
+            </header>
+            <div class="vc__price" aria-live="polite">
+              <span class="vc__hidden">{v.priceHidden}</span>
+              <span class="vc__shown">
+                <small>{v.from}</small>
+                <b class="num" data-price={ver.price}>{formatPrice(ver.price, L)}</b>
+                <small>{v.currency}</small>
+              </span>
+            </div>
+            <ul>
+              {it.highlights.map((h) => <li><Icon name="check" size={16} />{h}</li>)}
+            </ul>
+            <div class="vc__meta">
+              <span>{v.delivery}</span><b class="num">{digits(ver.delivery, L)} {v.days}</b>
+            </div>
+            <a class={`btn ${ver.featured ? 'btn--primary' : 'btn--ghost'} vc__cta`} href="#contact" data-select-version={ver.id} data-track="version_select" data-track-label={ver.id}>
+              {v.select}
+            </a>
+          </article>
+        );
+      })}
+    </div>
+
+    <details class="vers__table card" data-reveal>
+      <summary><span>{v.compare}</span><Icon name="plus" size={20} /></summary>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"><span class="sr-only">{v.compare}</span></th>
+              {shared.versions.map((ver) => <th scope="col" class={ver.featured ? 'is-featured' : ''}>{v.items[ver.id].name}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {shared.matrix.map((row) => (
+              <tr>
+                <th scope="row">{v.matrix[row.key]}</th>
+                {row.values.map((val, j) => {
+                  const c = cell(val);
+                  return (
+                    <td class={shared.versions[j].featured ? 'is-featured' : ''}>
+                      {c.icon ? <Icon name={c.icon} size={18} class={`ic-${c.icon}`} /> : c.text}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+            <tr class="tbl-price">
+              <th scope="row">{v.from}</th>
+              {shared.versions.map((ver) => (
+                <td class={ver.featured ? 'is-featured' : ''}>
+                  <span class="vc__hidden">—</span><span class="vc__shown num">{formatPrice(ver.price, L)}</span>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <p class="vers__note">{v.priceNote}</p>
+  </div>
+</section>
+
+<style>
+  .vers__intro { display: grid; gap: 20px; justify-items: start; }
+  .switch { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 600; padding: 8px 16px 8px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); user-select: none; }
+  :global([dir='rtl']) .switch { padding: 8px 8px 8px 16px; }
+  .switch input { position: absolute; opacity: 0; pointer-events: none; }
+  .switch__ui { width: 46px; height: 26px; border-radius: 99px; background: rgb(255 255 255 / 0.14); position: relative; transition: background 0.3s; }
+  .switch__ui::after { content: ''; position: absolute; top: 3px; inset-inline-start: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 0.4s var(--ease-out); }
+  .switch input:checked + .switch__ui { background: var(--accent); }
+  .switch input:checked + .switch__ui::after { transform: translateX(20px); }
+  :global([dir='rtl']) .switch input:checked + .switch__ui::after { transform: translateX(-20px); }
+  .switch input:focus-visible + .switch__ui { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  .vers__cards { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 700px) { .vers__cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1180px) { .vers__cards { grid-template-columns: repeat(4, 1fr); } }
+  .vc { padding: 26px; display: flex; flex-direction: column; gap: 22px; transition: translate 0.6s var(--ease-out), border-color 0.3s; }
+  .vc:hover { translate: 0 -6px; }
+  .vc--featured { border-color: rgb(255 122 26 / 0.55); background: linear-gradient(180deg, rgb(255 122 26 / 0.13), rgb(255 255 255 / 0.015) 60%); }
+  .vc.is-selected { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan), 0 20px 60px -20px rgb(127 233 255 / 0.4); }
+  .vc__badge { position: absolute; top: 20px; inset-inline-end: 20px; font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: var(--accent); color: #140a02; }
+  .vc header { display: grid; gap: 4px; }
+  .vc__idx { font-size: 0.8rem; color: var(--dim); }
+  .vc h3 { font-size: clamp(1.7rem, 1.3rem + 1vw, 2.2rem); }
+  .vc header p { color: var(--muted); font-size: 0.92rem; }
+  .vc__price { min-height: 64px; display: grid; align-items: center; padding-block: 12px; border-block: 1px solid var(--line); }
+  .vc__price b { font-size: 1.45rem; font-weight: 700; }
+  .vc__price small { color: var(--muted); font-size: 0.78rem; }
+  .vc__shown { display: none; }
+  .vc__hidden { color: var(--muted); font-size: 0.95rem; }
+  :global(.show-prices) .vc__shown { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 6px; animation: pop-in 0.5s var(--ease-out); }
+  :global(.show-prices) .vc__hidden { display: none; }
+  @keyframes pop-in { from { opacity: 0; transform: translateY(6px); filter: blur(4px); } }
+  .vc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 0.92rem; }
+  .vc li { display: flex; gap: 10px; align-items: center; }
+  .vc li :global(svg) { color: var(--good); flex: none; }
+  .vc__meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-top: auto; }
+  .vc__meta b { color: var(--text); font-weight: 600; }
+  .vc__cta { width: 100%; }
+
+  .vers__table { margin-top: 16px; overflow: hidden; }
+  .vers__table summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 20px 26px; font-weight: 700; }
+  .vers__table summary::-webkit-details-marker { display: none; }
+  .vers__table summary :global(svg) { transition: transform 0.4s var(--ease-out); }
+  .vers__table[open] summary :global(svg) { transform: rotate(45deg); }
+  .tbl-wrap { overflow-x: auto; padding: 0 12px 16px; }
+  table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 0.9rem; }
+  th, td { padding: 14px 14px; text-align: center; border-bottom: 1px solid var(--line); }
+  th[scope='row'] { text-align: start; font-weight: 500; color: var(--muted); }
+  thead th { font-size: 1rem; font-weight: 700; }
+  .is-featured { background: rgb(255 122 26 / 0.06); }
+  td :global(.ic-check) { color: var(--good); margin-inline: auto; }
+  td :global(.ic-minus) { color: var(--dim); margin-inline: auto; }
+  .vers__note { margin-top: 14px; font-size: 0.8rem; color: var(--dim); }
+</style>

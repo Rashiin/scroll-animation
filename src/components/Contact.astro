@@ -1,0 +1,179 @@
+---
+import Icon from './Icon.astro';
+import { shared } from '../i18n.js';
+const { t } = Astro.props;
+const c = t.contact;
+const v = t.versions;
+const { contact, form } = shared;
+---
+<section class="section contact" id="contact">
+  <div class="contact__bg" aria-hidden="true"></div>
+  <div class="wrap contact__grid">
+    <div class="contact__intro">
+      <span class="kicker" data-reveal>{c.kicker}</span>
+      <h2 class="h-lg" data-split>{c.title}</h2>
+      <p class="lead" data-reveal>{c.text}</p>
+
+      <div class="cc" data-reveal>
+        <a class="cc__item cc__item--call" href={`tel:${contact.phone}`} data-track="call_click" data-track-label="contact_section">
+          <span class="cc__ic"><Icon name="phone" /></span>
+          <span><small>{c.callTitle}</small><b class="latin" dir="ltr">{contact.phone.replace('+98', '0').replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3')}</b><small>{c.callText}</small></span>
+        </a>
+        <a class="cc__item" href={`https://wa.me/${contact.whatsapp}`} target="_blank" rel="noopener" data-track="whatsapp_click">
+          <span class="cc__ic"><Icon name="whatsapp" /></span>
+          <span><b>{c.whatsapp}</b></span>
+        </a>
+        <div class="cc__item">
+          <span class="cc__ic"><Icon name="pin" /></span>
+          <span><b>{c.addressTitle}</b><small>{c.address}</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="fcard card" data-reveal>
+      <form class="form" data-lead-form novalidate
+        data-endpoint={form.endpoint} data-min-seconds={form.minFillSeconds}
+        data-err-required={c.errors.required} data-err-mobile={c.errors.mobile} data-err-name={c.errors.name} data-err-spam={c.errors.spam}
+        data-sending={c.sending} data-error={c.error}>
+        <div class="tabs" role="radiogroup" aria-label={c.modes.consult}>
+          <label><input type="radio" name="request_type" value="consult" checked /><span>{c.modes.consult}</span></label>
+          <label><input type="radio" name="request_type" value="visit" /><span>{c.modes.visit}</span></label>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="f-name">{c.fields.name} <i>*</i></label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required minlength="3" placeholder={c.placeholders.name} />
+            <span class="err" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="f-mobile">{c.fields.mobile} <i>*</i></label>
+            <input id="f-mobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel" dir="ltr" required placeholder={c.placeholders.mobile} />
+            <span class="err" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="f-city">{c.fields.city} <i>*</i></label>
+            <input id="f-city" name="city" type="text" autocomplete="address-level2" required placeholder={c.placeholders.city} />
+            <span class="err" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="f-use">{c.fields.use} <i>*</i></label>
+            <select id="f-use" name="use" required>
+              <option value="">{c.choose}</option>
+              {c.useOptions.map((o) => <option value={o}>{o}</option>)}
+            </select>
+            <span class="err" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend>{c.fields.version}</legend>
+          <div class="vpick">
+            {shared.versions.map((ver) => (
+              <label><input type="radio" name="version" value={ver.id} /><span>{v.items[ver.id].name}</span></label>
+            ))}
+            <label><input type="radio" name="version" value="undecided" checked /><span>{c.versionAny}</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="f-msg">{c.fields.message}</label>
+          <textarea id="f-msg" name="message" rows="3" placeholder={c.placeholders.message}></textarea>
+        </div>
+
+        <!-- Anti-spam: honeypot + minimum fill time + JS-issued token. No reCAPTCHA. -->
+        <div class="hp" aria-hidden="true">
+          <label for="f-company">Company</label>
+          <input id="f-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <input type="hidden" name="started_at" />
+        <input type="hidden" name="js_token" />
+
+        <button class="btn btn--primary form__submit" type="submit" data-magnetic>
+          <span data-submit-label>{c.submit}</span><Icon name="arrow" class="flip" />
+        </button>
+        <p class="form__privacy">{c.privacy}</p>
+        <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+      </form>
+
+      <div class="done" data-form-done hidden tabindex="-1">
+        <svg viewBox="0 0 80 80" class="done__check" aria-hidden="true"><circle cx="40" cy="40" r="36" /><path d="M24 41l11 11 21-24" /></svg>
+        <h3>{c.successTitle}</h3>
+        <p>{c.success} <b class="latin" data-ref></b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact { overflow: hidden; }
+  .contact__bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(50% 60% at 85% 20%, rgb(255 122 26 / 0.14), transparent 70%), radial-gradient(40% 50% at 10% 90%, rgb(127 233 255 / 0.08), transparent 70%); }
+  :global([dir='rtl']) .contact__bg { transform: scaleX(-1); }
+  .contact__grid { position: relative; display: grid; gap: 48px; }
+  @media (min-width: 1040px) { .contact__grid { grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: start; } }
+  .contact__intro { display: grid; gap: 18px; align-content: start; }
+
+  .cc { display: grid; gap: 10px; margin-top: 18px; }
+  .cc__item { display: flex; gap: 16px; align-items: center; padding: 16px 18px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); transition: border-color 0.3s, background 0.3s; }
+  a.cc__item:hover { border-color: var(--line-2); background: var(--surface-2); }
+  .cc__item > span:last-child { display: grid; }
+  .cc__item small { color: var(--muted); font-size: 0.8rem; }
+  .cc__item b { font-size: 1.05rem; }
+  .cc__item--call b { font-size: 1.5rem; letter-spacing: 0.02em; }
+  :global([dir='rtl']) .cc__item--call b { text-align: right; }
+  .cc__ic { flex: none; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgb(255 122 26 / 0.12); color: var(--accent); }
+  .cc__item--call .cc__ic { background: var(--accent); color: #140a02; }
+
+  .fcard { padding: clamp(22px, 3vw, 40px); }
+  .form { display: grid; gap: 18px; }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 14px; background: rgb(255 255 255 / 0.04); border: 1px solid var(--line); }
+  .tabs label { position: relative; }
+  .tabs input, .vpick input { position: absolute; opacity: 0; pointer-events: none; }
+  .tabs span { display: block; text-align: center; padding: 11px 8px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; color: var(--muted); cursor: pointer; transition: background 0.3s, color 0.3s; }
+  .tabs input:checked + span { background: var(--text); color: #0a0c10; }
+  .tabs input:focus-visible + span, .vpick input:focus-visible + span { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+  .row { display: grid; gap: 18px; }
+  @media (min-width: 600px) { .row { grid-template-columns: 1fr 1fr; } }
+  .field { display: grid; gap: 7px; border: 0; margin: 0; padding: 0; min-width: 0; }
+  .field label, .field legend { font-size: 0.85rem; font-weight: 600; color: #cfd5de; padding: 0; margin-bottom: 7px; }
+  .field i { color: var(--accent); font-style: normal; }
+  .field input, .field select, .field textarea {
+    width: 100%; min-height: 52px; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line-2); background: rgb(0 0 0 / 0.25);
+    font-size: 1rem; transition: border-color 0.25s, box-shadow 0.25s, background 0.25s; appearance: none; -webkit-appearance: none;
+  }
+  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f99a8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 18px; background-position: left 14px center; padding-inline-end: 44px; }
+  :global([dir='ltr']) .field select { background-position: right 14px center; }
+  .field select option { background: #0b0e13; }
+  .field textarea { min-height: 96px; resize: vertical; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--dim); }
+  :global([dir='rtl']) .field input[dir='ltr']::placeholder { text-align: right; }
+  :global([dir='rtl']) .field input[dir='ltr'] { text-align: right; }
+  .field :is(input, select, textarea):focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgb(255 122 26 / 0.15); background: rgb(0 0 0 / 0.35); }
+  .field.is-invalid :is(input, select) { border-color: var(--danger); }
+  .field.is-valid input { border-color: rgb(88 224 166 / 0.6); }
+  .err { min-height: 0; font-size: 0.78rem; color: var(--danger); }
+  .err:empty { display: none; }
+
+  .vpick { display: flex; flex-wrap: wrap; gap: 8px; }
+  .vpick span { display: inline-block; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 0.88rem; cursor: pointer; transition: all 0.25s; }
+  .vpick input:checked + span { background: rgb(255 122 26 / 0.15); border-color: var(--accent); color: var(--accent-2); }
+
+  .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); opacity: 0; pointer-events: none; }
+  .form__submit { width: 100%; min-height: 58px; font-size: 1.05rem; }
+  .form__submit[disabled] { opacity: 0.7; pointer-events: none; }
+  .form__privacy { font-size: 0.78rem; color: var(--dim); text-align: center; }
+  .form__status { font-size: 0.88rem; color: var(--danger); text-align: center; }
+  .form__status:empty { display: none; }
+
+  .done { display: grid; justify-items: center; text-align: center; gap: 14px; padding: 40px 10px; outline: none; }
+  .done__check { width: 96px; height: 96px; fill: none; stroke: var(--good); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .done__check circle { stroke-dasharray: 227; stroke-dashoffset: 227; animation: dash 0.9s var(--ease-out) forwards; }
+  .done__check path { stroke-dasharray: 60; stroke-dashoffset: 60; animation: dash 0.6s var(--ease-out) 0.6s forwards; }
+  @keyframes dash { to { stroke-dashoffset: 0; } }
+  .done h3 { font-size: 1.8rem; }
+  .done p { color: var(--muted); }
+  .done b { color: var(--text); letter-spacing: 0.1em; }
+</style>
